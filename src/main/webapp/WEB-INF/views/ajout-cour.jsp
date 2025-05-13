@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="sn.isep.dbe.modele.Filiere" %>
+<%@ page import="sn.isep.dbe.modele.Cour" %>
 <%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: alndiaye
@@ -10,9 +10,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Ajouter un Cours</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
-
 </head>
 <body>
 <header>
@@ -21,18 +20,18 @@
         <ul>
             <li><a href="/accueil">Accueil</a></li>
             <li><a href="/etudiants/ajouter">Etudiants</a></li>
-            <li><a href="/cours/ajouter">Cours</a></li>
-            <li><a href="" class="active">Filières</a></li>
-            <li><a href="/notes/ajouter">Notes</a></li>
+            <li><a href="cours/ajouter" class="active">Cours</a></li>
+            <li><a href="/filieres/ajouter">Filières</a></li>
+            <li><a href="notes/ajouter">Notes</a></li>
         </ul>
     </nav>
 </header>
 
 <main>
     <section class="form-container">
-        <h2>Ajouter une nouvelle filière</h2>
+        <h2>Ajouter un nouveau cours</h2>
 
-        <form action="/filieres/ajouter" method="post">
+        <form action="/cours/ajouter" method="post">
             <div class="form-group">
                 <label for="code">Code</label>
                 <input type="text" name="code" id="code" placeholder="Code" required>
@@ -44,29 +43,23 @@
             </div>
 
             <div class="form-group">
-                <label for="nom">Département</label>
-                <select id="departement" name="departement">
-                    <option value="TIC">TIC</option>
-                    <option value="AUTO">Automobile</option>
-                </select>
+                <label for="description">Description</label>
+                <textarea name="description" id="description" placeholder="Description"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="nomResponsable">Nom</label>
-                <input type="text" name="nomResponsable" id="nomResponsable" placeholder="nomResponsable">
+                <label for="professeur">Professeur</label>
+                <input type="text" name="professeur" id="professeur" placeholder="Nom du professeur">
             </div>
+
             <div class="form-group">
-                <label for="prenomResponsable">Prénom</label>
-                <input type="text" name="prenomResponsable" id="prenomResponsable" placeholder="prenomResponsable">
-            </div>
-            <div class="form-group">
-                <label for="capacite">Capacité</label>
-                <input type="number" name="capacite" id="capacite" placeholder="capacite">
+                <label for="duree">Durée (en heures)</label>
+                <input type="number" name="duree" id="duree" placeholder="Durée en heures" required>
             </div>
 
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Ajouter</button>
-                <a href="/filieres/lister" class="btn btn-secondary">Annuler</a>
+                <a href="/cours/lister" class="btn btn-secondary">Annuler</a>
             </div>
         </form>
     </section>

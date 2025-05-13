@@ -21,7 +21,7 @@ FiliereService filiereService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //recupere la filiere ayant l id donne en parametre
+
         String idParam= req.getParameter("id");
         if (idParam == null) {
             resp.sendRedirect(req.getContextPath() + "/filieres/lister");
@@ -70,10 +70,10 @@ FiliereService filiereService;
         filiereExistant.setPrenomResponsable(prenomResponsable);
         filiereExistant.setCapacite(Integer.parseInt(capacite));
 
-        // effectuer les changement dans la bd
+
         filiereService.modifierFiliere(filiereExistant);
 
-        // retourner vers la liste
+
         resp.sendRedirect(req.getContextPath() + "/filieres/lister");
     }
 }

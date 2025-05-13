@@ -1,18 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="sn.isep.dbe.modele.Filiere" %>
-<%@ page import="java.util.ArrayList" %><%--
-  Created by IntelliJ IDEA.
-  User: alndiaye
-  Date: 30-04-2025
-  Time: 10:07
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+  <title>Liste des filières</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
-
 </head>
 <body>
 <header>
@@ -20,10 +11,10 @@
   <nav>
     <ul>
       <li><a href="/accueil">Accueil</a></li>
-      <li><a href="">Etudiants</a></li>
-      <li><a href="">Cours</a></li>
+      <li><a href="/etudiants/lister">Étudiants</a></li>
+      <li><a href="/cours/lister">Cours</a></li>
       <li><a href="" class="active">Filières</a></li>
-      <li><a href="">Notes</a></li>
+      <li><a href="/notes/lister">Notes</a></li>
     </ul>
   </nav>
 </header>
@@ -49,22 +40,6 @@
       </thead>
 
       <tbody>
-<%--
-      <%
-        ArrayList<Filiere> filieres = (ArrayList<Filiere>) request.getAttribute("filieres");
-        for (Filiere filiere: filieres) {
-          %>
-
-      <tr>
-        <td><%=filiere.getId()%></td>
-        <td><%=filiere.getCode()%></td>
-        <td><%=filiere.getNom()%></td>
-        <td><%=filiere.getPrenomResponsable()%> <%=filiere.getNomResponsable()%></td>
-        <td><%=filiere.getCapacite()%></td>
-      </tr>
-
-      <% }%>--%>
-
       <c:forEach items="${filieres}" var="filiere">
         <tr>
           <td>${filiere.id}</td>
@@ -76,7 +51,13 @@
           <td class="actions">
             <a class="btn-details">Détails</a>
             <a href="${pageContext.request.contextPath}/filieres/modifier?id=${filiere.id}" class="btn-edit">Modifier</a>
-            <a class="btn-delete">Supprimer</a>
+
+            <!-- Bouton de suppression avec confirmation -->
+            <a href="${pageContext.request.contextPath}/filieres/supprimer?id=${filiere.id}"
+               class="btn-delete"
+               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">
+              Supprimer
+            </a>
           </td>
         </tr>
       </c:forEach>

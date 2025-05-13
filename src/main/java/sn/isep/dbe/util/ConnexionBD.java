@@ -3,9 +3,9 @@ package sn.isep.dbe.util;
 import java.sql.*;
 
 public class ConnexionBD {
-    private static final String URL = "jdbc:mysql://localhost:3306/gestion_scolaire";
-    private static final String USER = "alndiaye";
-    private static final String PASSWORD = "alndiaye";
+    private static final String URL = "jdbc:mysql://localhost:3306/gestionetudiantjee";
+    private static final String USER = "root";
+    private static final String PASSWORD = "nani";
 
     static {
         try {

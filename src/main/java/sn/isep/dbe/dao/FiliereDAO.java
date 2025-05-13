@@ -9,24 +9,17 @@ import java.util.List;
 
 public class FiliereDAO {
 
+    // Récupérer toutes les filières
     public List<Filiere> findAll() {
         List<Filiere> filieres = new ArrayList<>();
+        String sql = "SELECT * FROM filiere";
 
-        try (Connection connection = ConnexionBD.getConnection()){
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from filiere");
+        try (Connection connection = ConnexionBD.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
 
             while (rs.next()) {
-                Filiere filiere = new Filiere();
-                filiere.setId(rs.getInt("id"));
-                filiere.setCode(rs.getString("code"));
-                filiere.setNom(rs.getString("nom"));
-                filiere.setDepartement(rs.getString("departement"));
-                filiere.setNomResponsable(rs.getString("nom_responsable"));
-                filiere.setPrenomResponsable(rs.getString("prenom_responsable"));
-                filiere.setCapacite(rs.getInt("capacite"));
-
-                filieres.add(filiere);
+                filieres.add(mapResultSetToFiliere(rs));
             }
 
         } catch (SQLException e) {
@@ -36,24 +29,21 @@ public class FiliereDAO {
         return filieres;
     }
 
+    // Récupérer une filière par son ID
     public Filiere findById(int id) {
         Filiere filiere = null;
+        String sql = "SELECT * FROM filiere WHERE id = ?";
 
-        String sql = "select * from filiere where id = " + id;
-        try(Connection conn = ConnexionBD.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(sql);
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
+
             if (rs.next()) {
-                filiere = new Filiere();
-                filiere.setId(rs.getInt("id"));
-                filiere.setCode(rs.getString("code"));
-                filiere.setNom(rs.getString("nom"));
-                filiere.setDepartement(rs.getString("departement"));
-                filiere.setNomResponsable(rs.getString("nom_responsable"));
-                filiere.setPrenomResponsable(rs.getString("prenom_responsable"));
-                filiere.setCapacite(rs.getInt("capacite"));
-
+                filiere = mapResultSetToFiliere(rs);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -61,36 +51,37 @@ public class FiliereDAO {
         return filiere;
     }
 
+    // Sauvegarder une nouvelle filière
     public Filiere save(Filiere filiere) {
-        String sql = "insert into filiere (code, nom, departement, nom_responsable, prenom_responsable, capacite) values (?, ?, ?, ?, ?, ?)";
-        try (Connection connection = ConnexionBD.getConnection()){
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, filiere.getCode());
-            statement.setString(2, filiere.getNom());
-            statement.setString(3, filiere.getDepartement());
-            statement.setString(4, filiere.getNomResponsable());
-            statement.setString(5, filiere.getPrenomResponsable());
-            statement.setInt(6, filiere.getCapacite());
+        String sql = "INSERT INTO filiere (code, nom, departement, nom_responsable, prenom_responsable, capacite) VALUES (?, ?, ?, ?, ?, ?)";
 
+        try (Connection connection = ConnexionBD.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            setPreparedStatementParameters(statement, filiere);
             statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                filiere.setId(generatedKeys.getInt(1)); // Récupérer l'ID généré
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return filiere;
     }
 
+    // Mettre à jour une filière
     public Filiere update(Filiere filiere) {
-        String sql = "update filiere set code = ?, nom = ?, departement = ?, nom_responsable = ?, prenom_responsable = ?, capacite = ? where id = ?";
-        try (Connection conn = ConnexionBD.getConnection()){
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, filiere.getCode());
-            statement.setString(2, filiere.getNom());
-            statement.setString(3, filiere.getDepartement());
-            statement.setString(4, filiere.getNomResponsable());
-            statement.setString(5, filiere.getPrenomResponsable());
-            statement.setInt(6, filiere.getCapacite());
-            statement.setInt(7, filiere.getId());
+        String sql = "UPDATE filiere SET code = ?, nom = ?, departement = ?, nom_responsable = ?, prenom_responsable = ?, capacite = ? WHERE id = ?";
 
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            setPreparedStatementParameters(statement, filiere);
+            statement.setInt(7, filiere.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -100,7 +91,41 @@ public class FiliereDAO {
         return filiere;
     }
 
-    public void delete(Filiere filiere) {
+    // Supprimer une filière
+    public void delete(int id) {
+        String sql = "DELETE FROM filiere WHERE id = ?";
 
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Mapper un ResultSet vers un objet Filiere
+    private Filiere mapResultSetToFiliere(ResultSet rs) throws SQLException {
+        Filiere filiere = new Filiere();
+        filiere.setId(rs.getInt("id"));
+        filiere.setCode(rs.getString("code"));
+        filiere.setNom(rs.getString("nom"));
+        filiere.setDepartement(rs.getString("departement"));
+        filiere.setNomResponsable(rs.getString("nom_responsable"));
+        filiere.setPrenomResponsable(rs.getString("prenom_responsable"));
+        filiere.setCapacite(rs.getInt("capacite"));
+        return filiere;
+    }
+
+    // Définir les paramètres d'un PreparedStatement pour une Filiere
+    private void setPreparedStatementParameters(PreparedStatement statement, Filiere filiere) throws SQLException {
+        statement.setString(1, filiere.getCode());
+        statement.setString(2, filiere.getNom());
+        statement.setString(3, filiere.getDepartement());
+        statement.setString(4, filiere.getNomResponsable());
+        statement.setString(5, filiere.getPrenomResponsable());
+        statement.setInt(6, filiere.getCapacite());
     }
 }

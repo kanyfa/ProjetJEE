@@ -6,33 +6,30 @@ import sn.isep.dbe.modele.Filiere;
 import java.util.List;
 
 public class FiliereService {
-    FiliereDAO filiereDAO = new FiliereDAO();
+    private final FiliereDAO filiereDAO = new FiliereDAO();
 
+    // Récupérer toutes les filières
     public List<Filiere> getAllFilieres() {
-        List<Filiere> filieres = filiereDAO.findAll();
-        return filieres;
+        return filiereDAO.findAll();
     }
 
+    // Ajouter une nouvelle filière
     public Filiere ajoutFiliere(Filiere filiere) {
-        Filiere result = filiereDAO.save(filiere);
-        return result;
+        return filiereDAO.save(filiere);
     }
 
-    // ajouter une nouvelle filiere,
-    // recuperer toutes les filieres,
-    // recuperer une filiere via son id
-
-    // recuperer une filiere via son code
+    // Récupérer une filière par son ID
     public Filiere getFiliereById(int id) {
-        Filiere filiere = filiereDAO.findById(id);
-        return filiere;
-    }
-    // modifier une filiere
-    public Filiere modifierFiliere(Filiere filiere) {
-        Filiere result = filiereDAO.update(filiere);
-        return result;
+        return filiereDAO.findById(id);
     }
 
-    // supprimer une filiere
-    // etc
+    // Modifier une filière
+    public Filiere modifierFiliere(Filiere filiere) {
+        return filiereDAO.update(filiere);
+    }
+
+    // Supprimer une filière
+    public void supprimerFiliere(int id) {
+        filiereDAO.delete(id);  // Correction : Utilisation du bon DAO
+    }
 }

@@ -20,10 +20,10 @@
   <nav>
     <ul>
       <li><a href="/accueil">Accueil</a></li>
-      <li><a href="">Etudiants</a></li>
-      <li><a href="">Cours</a></li>
+      <li><a href="/etudiants/modifier">Etudiants</a></li>
+      <li><a href="cours/modifier">Cours</a></li>
       <li><a href="" class="active">Filières</a></li>
-      <li><a href="">Notes</a></li>
+      <li><a href="notes/modifier">Notes</a></li>
     </ul>
   </nav>
 </header>
